@@ -53,11 +53,11 @@ const grid = Array(cells)
     .fill(null)
     .map(() => Array(cells).fill(false))
 
-const verticala = Array(cells)
+const verticals = Array(cells)
     .fill(null)
     .map(() => Array(cells - 1).fill(false))
 
-const horizontal = Array(cells - 1)
+const horizontals = Array(cells - 1)
     .fill(null)
     .map(() => Array(cells).fill(false))
 
@@ -73,14 +73,53 @@ const stepThroughCell = (row, column) => {
     grid[row][column] = true;
 
     const neighbors = shuffle([
-        [row - 1, column],
-        [row, column + 1],
-        [row + 1, column],
-        [row, column - 1]
+        [row - 1, column, 'up'],
+        [row, column + 1, 'right'],
+        [row + 1, column, 'down'],
+        [row, column - 1, 'left']
     ])
+    console.log(neighbors)
+
+
+    for (let neighbor of neighbors) {
+        const [nextRow, nextColumn, direction] = neighbor;
+
+        if (nextRow < 0
+            || nextRow >= cells
+            || nextColumn < 0
+            || nextColumn
+            >= cells
+        ) {
+            continue;
+        }
+        // console.log('here')
+
+        // IF we have visited that neighbor, continue to next neighbor
+        if (grid[nextRow][nextColumn]) {
+            continue;
+        }
+        // console.log('here')
+
+        // Remove a wall from either horizontals or verticals
+
+        if (direction === 'left') {
+            verticals[row][column - 1] = true;
+        }
+        else if (direction === 'right') {
+            verticals[row][column] = true
+        }
+        else if (direction === 'up') {
+            horizontals[row - 1][column] = true
+        }
+        else if (direction === 'down') {
+            horizontals[row][column] = true
+        }
+
+
+    }
 
 
 }
-// stepThroughCell(startRow, startColumn)
-stepThroughCell(1, 1)
+stepThroughCell(startRow, startColumn)
+// stepThroughCell(1, 1)
 // console.log(grid)
