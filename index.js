@@ -4,6 +4,8 @@ const cells = 3
 const width = 600
 const height = 600
 
+const unitLength = width / cells;
+
 const engine = Engine.create();
 const { world } = engine;
 const render = Render.create({
@@ -78,7 +80,6 @@ const stepThroughCell = (row, column) => {
         [row + 1, column, 'down'],
         [row, column - 1, 'left']
     ])
-    console.log(neighbors)
 
 
     for (let neighbor of neighbors) {
@@ -115,11 +116,31 @@ const stepThroughCell = (row, column) => {
             horizontals[row][column] = true
         }
 
+        stepThroughCell(nextRow, nextColumn)
 
     }
 
 
 }
 stepThroughCell(startRow, startColumn)
-// stepThroughCell(1, 1)
-// console.log(grid)
+
+horizontals.forEach((row, rowIndex) => {
+    row.forEach((open, columnIndex) => {
+        if (open === true) {
+            return
+        }
+
+        const wall = Bodies.rectangle(
+            columnIndex * unitLength + unitLength / 2,
+            rowIndex * unitLength + unitLength,
+            unitLength,
+            10,
+            {
+                isStatic: true
+            }
+        );
+        console.log(wall)
+
+        World.add(world, wall)
+    })
+})
